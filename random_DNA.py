@@ -24,7 +24,7 @@ try :
     stats = Counter(mydna)
     print "-Statistics-"
     for key in stats.keys() :
-        print str(key)+ ":"+str(int(((stats[key])/length)*100))+"%"
+        print str(key)+ ":"+str(round(((stats[key])/length)*100,1))+"%"
 except IndexError :
     print "Please specify the length of your desired random DNA molecule. \npython random_DNA.py YourLength"
 except ValueError :
