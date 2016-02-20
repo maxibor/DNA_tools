@@ -8,6 +8,7 @@
 	
 	usage : `python fasta_length.py file.fa`
 - **reverse_complement.py** : computes the revese complement of a DNA sequence
+
 	usage : `python reverse_complement.py CGGGTA`
 
 -
