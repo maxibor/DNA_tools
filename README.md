@@ -15,8 +15,8 @@
 To add the tools to your command prompt, use aliases in your `~/.bash_profile` file
 
 ``` 
-alias revcom "python path/to/reverse_complement.py"
-alias fasta_len "python path/to/fasta_length.py"
+alias revcom="python path/to/reverse_complement.py"
+alias fasta_len="python path/to/fasta_length.py"
 ```
 
 Save it and reload it with `source .bash_profile`
