@@ -10,6 +10,9 @@
 - **reverse_complement.py** : computes the revese complement of a DNA sequence
 
 	usage : `python reverse_complement.py CGGGTA`
+- **faStats.py** : compute sequence length of all sequences in a fasta file
+
+	usage : `faStats file.fa`
 
 -
 	
@@ -18,6 +21,7 @@ To add the tools to your command prompt, use aliases in your `~/.bash_profile` f
 ``` 
 alias revcom="python path/to/reverse_complement.py"
 alias fasta_len="python path/to/fasta_length.py"
+# ...
 ```
 
 Save it and reload it with `source .bash_profile`
