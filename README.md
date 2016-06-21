@@ -20,19 +20,19 @@
 
 -
 	
-To add the tools to your command prompt, use aliases in your `~/.bash_profile` file
+To add the tools to your command prompt :
+- Option 1 : use aliases in your `~/.bash_profile` or `~/.bashrc`  file to add each tool one by one
 
 ``` 
-alias revcom="python path/to/reverse_complement.py"
-alias fasta_len="python path/to/fasta_length.py"
-# ...
+echo "alias revcom=python path/to/reverse_complement.py" >> ~/.bash_profile
+source ~/.bash_profile
 ```
 
-Save it and reload it with `source .bash_profile`
+Save it and reload it with `source .bash_profile` or `source .bashrc`
 
-Now you can access the DNA tools from any location in the terminal, for example :
+- Option 2 : Add all the DNA tools at once to your $PATH variable environment variable (replace the location of dna tools directory)
 
 ```
-betsy:~ Maxime$ revcom CGGGTA
-TACCCG
+echo "export PATH=/path/to/dna/tools/directory/:$PATH" >> ~/.bahrc
+source ~/.bashrc
 ```
