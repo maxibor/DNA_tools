@@ -28,7 +28,6 @@ echo "alias revcom=python path/to/reverse_complement.py" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
-Save it and reload it with `source .bash_profile` or `source .bashrc`
 
 - Option 2 : Add all the DNA tools at once to your $PATH variable environment variable (replace the location of dna tools directory)
 
