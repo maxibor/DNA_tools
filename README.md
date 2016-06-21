@@ -13,6 +13,10 @@
 - **faStats.py** : compute sequence length of all sequences in a fasta file
 
 	usage : `faStats file.fa`
+    
+- **melting_temp.py** : compute melting temperature of a sequence
+
+	usage : `melting_temp.py DnaSequence`
 
 -
 	
