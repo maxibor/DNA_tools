@@ -32,6 +32,6 @@ source ~/.bash_profile
 - Option 2 : Add all the DNA tools at once to your $PATH variable environment variable (replace the location of dna tools directory)
 
 ```
-echo "export PATH=/path/to/dna/tools/directory/:$PATH" >> ~/.bahrc
+echo "export PATH=/path/to/dna/tools/directory/:$PATH" >> ~/.bashrc
 source ~/.bashrc
 ```
