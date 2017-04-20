@@ -1,6 +1,6 @@
-##DNA TOOLS
+## DNA TOOLS
 
-####A set of tools for to play with/analyze genomics data
+#### A set of tools for to play with/analyze genomics data
 - **random_dna.py** : creates a random sequence of DNA of length K
 
 	usage : `python random_dna.py K`
@@ -18,23 +18,25 @@
 
 	usage : `melting_temp.py DnaSequence`
 
-- **entrez_specie.py** : returns the specie/organism name given an ENTREZ id.
+- **entrez_specie.py** : returns the specie/organism name given an ENTREZ id.  
 	usage : `python entrez_specie.py 1567`
 
--
 
-To add the tools to your command prompt :
-- Option 1 : use aliases in your `~/.bash_profile` or `~/.bashrc`  file to add each tool one by one
+------------
 
-*example*
+#### To add the tools to your command prompt :
+- **Option 1 :** use aliases in your `~/.bash_profile` or `~/.bashrc`  file to add each tool one by one
+
+*example :*
 ```
 echo "alias revcom=python path/to/reverse_complement.py" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
 
-- Option 2 : Add all the DNA tools at once to your $PATH variable environment variable (replace the location of dna tools directory)
+- **Option 2 :** Add all the DNA tools at once to your $PATH variable environment variable (replace the location of dna tools directory)
 
+*example :*
 ```
 echo "export PATH=/path/to/dna/tools/directory/:$PATH" >> ~/.bashrc
 source ~/.bashrc
