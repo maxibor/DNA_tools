@@ -18,26 +18,31 @@
 
 	usage : `melting_temp.py DnaSequence`
 
-- **entrez_specie.py** : returns the specie/organism name given an ENTREZ id.  
+- **entrez_specie.py** : returns the specie/organism name given an ENTREZ id.
+
 	usage : `python entrez_specie.py 1567`
+
+- **fastq_split.py** : splits a merged paired-end Illumina `{basename}.fastq` (or compressed `fastq.gz`) file in `{basename}.R1.fastq` and `{basename}.R2.fastq`
+
+	usage : `python fastq_split.py paired_end_file.fastq`
 
 
 ------------
 
 #### To add the tools to your command prompt :
-- **Option 1 :** use aliases in your `~/.bash_profile` or `~/.bashrc`  file to add each tool one by one
+- **Option 1 :** use aliases in your `~/.bash_profile` or `~/.bashrc`  file to add each tool one by one  (replace `/path/to/DNA_tools/` with the location of the tool)
 
 *example :*
 ```
-echo "alias revcom=python path/to/reverse_complement.py" >> ~/.bash_profile
-source ~/.bash_profile
+echo "alias revcom=python /path/to/DNA_tools/reverse_complement.py" >> ~/.bashrc
+source ~/.bashrc
 ```
 
 
-- **Option 2 :** Add all the DNA tools at once to your $PATH variable environment variable (replace the location of dna tools directory)
+- **Option 2 :** Add all the DNA tools at once to your `$PATH` environment variable (replace `/path/to/` with the location of the `DNA_tools` directory)
 
 *example :*
 ```
-echo "export PATH=/path/to/dna/tools/directory/:$PATH" >> ~/.bashrc
+echo "export PATH=$PATH:/path/to/DNA_tools/" >> ~/.bashrc
 source ~/.bashrc
 ```
