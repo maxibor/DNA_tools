@@ -26,6 +26,10 @@
 
 	usage : `python fastq_split.py paired_end_file.fastq`
 
+- **centrifuge2krona** : converts a [centrifuge](https://github.com/infphilo/centrifuge) output file to a [krona](https://github.com/marbl/Krona/wiki) visualisation using `centrifuge-kreport` and `ktImportTaxonomy`.
+
+	usage : `centrifuge2krona centrifuge_file.out`
+
 
 ------------
 
