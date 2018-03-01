@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 import sys
 
 def fasta_len_count (file) :

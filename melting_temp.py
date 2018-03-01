@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import division
 import sys
 #Calculation of sequence melting temperature
 #Author : Maxime Borry
@@ -36,17 +35,17 @@ def long_formula (dna_seq) :
 
 if len(seq) < 14 :
     Tm = str(short_formula(seq))
-    print "Sequence : "+seq
-    print "Melting temperature : "+Tm+" degC"
-    print " Warning : This software doesn't take into account degenarated bases"
-    print "Melting temperature calculated for the following conditions"
-    print "50 nM primer, 50 mM Na+, and pH 7.0"
+    print ("Sequence : "+seq)
+    print ("Melting temperature : "+Tm+" degC")
+    print (" Warning : This software doesn't take into account degenarated bases")
+    print ("Melting temperature calculated for the following conditions")
+    print ("50 nM primer, 50 mM Na+, and pH 7.0")
 elif len(seq) > 13 :
     Tm = str(long_formula(seq))
-    print "Sequence : "+seq
-    print "Melting temperature : "+Tm+" degC"
-    print "Warning : This software doesn't take into account degenarated bases"
-    print "Melting temperature calculated for the following conditions"
-    print "50 nM primer, 50 mM Na+, and pH 7.0"
+    print ("Sequence : "+seq)
+    print ("Melting temperature : "+Tm+" degC")
+    print ("Warning : This software doesn't take into account degenarated bases")
+    print ("Melting temperature calculated for the following conditions")
+    print ("50 nM primer, 50 mM Na+, and pH 7.0")
 else :
-    print "Error in sequence, please check your input"
+    print ("Error in sequence, please check your input")

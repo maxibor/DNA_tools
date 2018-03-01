@@ -1,4 +1,7 @@
-import argparse
+#!/usr/bin/env python
+
+
+mport argparse
 import gzip
 from collections import OrderedDict
 

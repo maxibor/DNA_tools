@@ -15,4 +15,4 @@ def reverse_complement(dna) :
 
     return "".join(revcom)
 
-print reverse_complement(sys.argv[1])
+print (reverse_complement(sys.argv[1]))
