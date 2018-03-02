@@ -30,6 +30,9 @@
 
 	usage : `centrifuge2krona centrifuge_file.out`
 
+- **sam_filter** : filters a sam file on identity percentage and alignment length.
+
+	usage: `sam_filter file.sam`
 
 ------------
 

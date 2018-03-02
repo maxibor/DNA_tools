@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+
+import argparse
+from pprint import pprint
+
+
+def get_args():
+    '''This function parses and return arguments passed in'''
+    parser = argparse.ArgumentParser(
+    prog='sam_filter',
+    description='Filtering sam files on identity percentage and match length')
+    parser.add_argument('sam', help="path to sam file")
+    parser.add_argument(
+    '-out',
+    default=None,
+    help="name of filtered sam file output. Default = {basename}.filtered.sam")
+    parser.add_argument(
+    '-minlen',
+    default=28,
+    help="Minimum length of match to report. Default = 28")
+    parser.add_argument(
+    '-idpercent',
+    default=0.99,
+    help="Minimum identity percentage of match to report. Default = 0.99")
+
+    args = parser.parse_args()
+
+    mysam = args.sam
+    myout = args.out
+    minlen = args.minlen
+    idpercent = args.idpercent
+    return(mysam, myout, minlen, idpercent)
+
+def get_basename(file_name):
+    if ("/") in file_name:
+        basename = file_name.split("/")[-1].split(".")[0]
+    else:
+        basename = file_name.split(".")[0]
+    return(basename)
+
+
+if __name__ == "__main__":
+    mysam, myout, minlen, idpercent = get_args()
+    basename = get_basename(mysam)
+
+    if not myout:
+        outname = basename
+    else:
+        outname = myout
+
+    with open(mysam, "r") as sam:
+        with open(outname+".filtered.sam","w") as fw:
+            for line in sam:
+                linestrip = line.rstrip()
+                linesplit = linestrip.split("\t")
+                for field in linesplit:
+                    if ("XM:i:") in field:
+                        mismatch = field.split(":")[2] # number of mismatches
+                        mismatch = int(mismatch)
+                        seq = linesplit[9]
+
+                        seqlen = len(seq) # length of aligned read
+                        identity = (seqlen-mismatch)/seqlen
+                        readname = linesplit[0]
+                        if identity >= idpercent and seqlen > minlen:
+                            fw.write(line)
