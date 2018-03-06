@@ -36,6 +36,10 @@ def _get_args():
     default="AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
     help="Reverse adaptor. Default = AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT")
     parser.add_argument(
+    '-e',
+    default=0.01,
+    help="Illumina sequecing error. Default = 0.01")
+    parser.add_argument(
     '-o',
     default=None,
     help="Output file basename. Default = ./{basename}.*")
@@ -49,9 +53,10 @@ def _get_args():
     lendev = int(args.lendev)
     a1 = args.fa
     a2 = args.ra
+    err = float(args.e)
     outfile= args.o
 
-    return(infile, nread, readlen, inserlen, lendev, a1, a2, outfile)
+    return(infile, nread, readlen, inserlen, lendev, a1, a2, err, outfile)
 
 def get_basename(file_name):
     if ("/") in file_name:
@@ -118,6 +123,14 @@ def complement_read(all_inserts, adaptor, read_length):
         result.append(read)
     return(result)
 
+def add_error(all_reads, error_rate):
+    for i in range(0, len(all_reads)):
+        for j in range(0, len(read)):
+            if npr.random() < error_rate:
+                all_reads[i][j] = nrp.choice(["A","T","G","C"])
+    return(all_reads)
+
+
 def write_fastq(all_reads, basename, orientation, read_length, outfile):
     if not outfile:
         with open(basename+"."+str(orientation)+".fastq", "w") as fw:
@@ -135,7 +148,7 @@ def write_fastq(all_reads, basename, orientation, read_length, outfile):
                 fw.write("d"*read_length+"\n")
 
 
-def run_read_simulation(INFILE, NREAD, READLEN, INSERLEN, LENDEV, A1, A2, OUTFILE, MINLENGTH):
+def run_read_simulation(INFILE, NREAD, READLEN, INSERLEN, LENDEV, A1, A2, OUTFILE, MINLENGTH, ERR):
     print("INFILE", INFILE)
     print("NREAD", NREAD)
     print("READLEN", READLEN)
@@ -152,13 +165,15 @@ def run_read_simulation(INFILE, NREAD, READLEN, INSERLEN, LENDEV, A1, A2, OUTFIL
     fwd_inserts = all_inserts
     rev_inserts = [reverse_complement(i) for i in all_inserts]
     fwd_reads = complement_read(fwd_inserts, A1, READLEN)
+    fwd_reads = add_error(fwd_reads, ERR)
     rev_reads = complement_read(rev_inserts, A2, READLEN)
+    rev_read = add_error(rev_reads, ERR)
 
     write_fastq(fwd_reads, basename, 1, READLEN, OUTFILE)
     write_fastq(rev_reads, basename, 2, READLEN, OUTFILE)
 
 if __name__ == "__main__":
-    INFILE, NREAD, READLEN, INSERLEN, LENDEV, A1, A2, OUTFILE = _get_args()
+    INFILE, NREAD, READLEN, INSERLEN, LENDEV, A1, A2, ERR, OUTFILE = _get_args()
     MINLENGTH = 20
 
-    run_read_simulation(INFILE, NREAD, READLEN, INSERLEN, LENDEV, A1, A2, OUTFILE, MINLENGTH)
+    run_read_simulation(INFILE, NREAD, READLEN, INSERLEN, LENDEV, A1, A2, OUTFILE, MINLENGTH, ERR)
