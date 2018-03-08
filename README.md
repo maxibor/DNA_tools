@@ -34,6 +34,10 @@
 
 	usage: `sam_filter file.sam`
 
+- **fasta_filter_length** : filters a fasta file on sequence length (min and max)
+
+	usage: `fasta_filter_length -min 1 -max 66 file.fa`
+
 ------------
 
 #### To add the tools to your command prompt :
