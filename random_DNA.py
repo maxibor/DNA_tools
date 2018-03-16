@@ -1,4 +1,4 @@
-from __future__ import division
+#!/usr/bin/env python
 
 '''
 random DNA string generator
@@ -20,12 +20,12 @@ try :
         else :
             mydna.append ("C")
 
-    print "".join(mydna)
+    print ("".join(mydna))
     stats = Counter(mydna)
-    print "-Statistics-"
+    print("-Statistics-")
     for key in stats.keys() :
-        print str(key)+ ":"+str(round(((stats[key])/length)*100,1))+"%"
+        print (str(key)+ ":"+str(round(((stats[key])/length)*100,1))+"%")
 except IndexError :
-    print "Please specify the length of your desired random DNA molecule. \npython random_DNA.py YourLength"
+    print ("Please specify the length of your desired random DNA molecule. \npython random_DNA.py YourLength")
 except ValueError :
-    print "Please enter a valid value for the length."
+    print ("Please enter a valid value for the length.")

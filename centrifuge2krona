@@ -14,6 +14,11 @@ def get_args():
     default="./nt",
     help="Centrifuge index. Default = ./nt")
     parser.add_argument(
+    '-tax',
+    default=None,
+    help="Krona taxonomy directory. Krona's default")
+
+    parser.add_argument(
     '-unique',
     default=True,
     help="Keep only reads that map uniquely to one taxon. Default = True")
@@ -35,12 +40,13 @@ def get_args():
     infile = args.infile
     index = args.index
     unique = args.unique
+    taxo = args.tax
     minlen = str(args.minlen)
     minscore = str(args.minscore)
     outpath = args.outpath
 
 
-    return(infile, index, unique, minlen, minscore, outpath)
+    return(infile, index, taxo, unique, minlen, minscore, outpath)
 
 def get_basename(file_name):
     if ("/") in file_name:
@@ -51,20 +57,30 @@ def get_basename(file_name):
 
 
 if __name__ == "__main__":
-    infile, index, unique, minlen, minscore, outpath = get_args()
+    infile, index, taxo, unique, minlen, minscore, outpath = get_args()
 
     basename = get_basename(infile)
     if unique == True:
         cmd = "centrifuge-kreport -x "+index+" --only-unique --min-score "+minscore+" --min-length "+minlen+" "+infile+ " > "+basename+"_centriKraken_onlyUnique_minScore_"+minscore+"_minLength_"+minlen+".out"
         print(cmd)
         os.system(cmd)
-        cmd = "ktImportTaxonomy -q 2 -t 5 -o "+basename+"_krona.html "+outpath+"/"+basename+"_centriKraken_onlyUnique_minScore_"+minscore+"_minLength_"+minlen+".out"
-        print(cmd)
-        os.system(cmd)
+        if not taxo:
+            cmd = "ktImportTaxonomy -q 2 -t 5 -o "+basename+"_krona.html "+outpath+"/"+basename+"_centriKraken_onlyUnique_minScore_"+minscore+"_minLength_"+minlen+".out"
+            print(cmd)
+            os.system(cmd)
+        else:
+            cmd = "ktImportTaxonomy -q 2 -t 5 -tax "+taxo+" -o "+basename+"_krona.html "+outpath+"/"+basename+"_centriKraken_onlyUnique_minScore_"+minscore+"_minLength_"+minlen+".out"
+            print(cmd)
+            os.system(cmd)
     else:
         cmd = "centrifuge-kreport -x "+index+" --min-score "+minscore+" --min-length "+minlen+" "+infile+" > "+basename+"_centriKraken_minScore_"+minscore+"_minLength_"+minlen+".out"
         print(cmd)
         os.system(cmd)
-        cmd = "ktImportTaxonomy -q 2 -t 5 -o "+basename+"_krona.html "+outpath+"/"+basename+"_centriKraken_onlyUnique_minScore_"+minscore+"_minLength_"+minlen+".out"
-        prind(cmd)
-        os.system(cmd)
+        if not taxo:
+            cmd = "ktImportTaxonomy -q 2 -t 5 -o "+basename+"_krona.html "+outpath+"/"+basename+"_centriKraken_onlyUnique_minScore_"+minscore+"_minLength_"+minlen+".out"
+            print(cmd)
+            os.system(cmd)
+        else:
+            cmd = "ktImportTaxonomy -q 2 -t 5 -tax "+taxo+" -o "+basename+"_krona.html "+outpath+"/"+basename+"_centriKraken_onlyUnique_minScore_"+minscore+"_minLength_"+minlen+".out"
+            print(cmd)
+            os.system(cmd)
