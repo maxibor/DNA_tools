@@ -1,0 +1,142 @@
+#!/usr/bin/env python
+
+import argparse
+
+
+def get_args():
+    '''This function parses and return arguments passed in'''
+    parser = argparse.ArgumentParser(
+        prog='krakenTometaphlan',
+        description='Converts a Kraken style report to a mataphlan style report')
+    parser.add_argument('infile', help="path to kraken-report file")
+    parser.add_argument(
+        '-o',
+        dest="output",
+        default=None,
+        help="Output file. Default = {basename}.metaphlan.out")
+
+    args = parser.parse_args()
+
+    infile = args.infile
+    output = args.output
+
+    return(infile, output)
+
+
+def get_basename(file_name):
+    if ("/") in file_name:
+        basename = file_name.split("/")[-1].split(".")[0]
+    else:
+        basename = file_name.split(".")[0]
+    return(basename)
+
+
+def update_taxrank(taxrank, pos):
+    for i in range(pos + 1, len(taxrank)):
+        taxrank[i] = ""
+    return(taxrank)
+
+
+if __name__ == "__main__":
+    INFILE, OUTPUT = get_args()
+
+    basename = get_basename(INFILE)
+
+    if not OUTPUT:
+        fileout = basename + ".metaphlan.out"
+    else:
+        fileout = OUTPUT
+
+    adomain = ""
+    akingdom = ""
+    aphylum = ""
+    aclass = ""
+    aorder = ""
+    afamily = ""
+    agenus = ""
+    aspecie = ""
+    towrite = []
+    taxrank = ["", "", "", "", "", "", "", ""]
+
+    with open(INFILE, "r") as f:
+        for line in f:
+            line = line.rstrip()
+            splitline = line.split()
+            rank = splitline[3]
+            aname = splitline[5]
+
+            if rank != "-" and aname != "unclassified":
+                propor = splitline[0]
+                if rank == "D":
+                    pos = 0
+                    adomain = "d__" + aname
+                    taxrank[pos] = adomain
+                    taxrank = update_taxrank(taxrank, pos)
+
+                else:
+                    adomain = ""
+
+                if rank == "K":
+                    pos = 1
+                    akingdom = "|k__" + aname
+                    taxrank[pos] = akingdom
+                    taxrank = update_taxrank(taxrank, pos)
+
+                else:
+                    akingdom = ""
+
+                if rank == "P":
+                    pos = 2
+                    aphylum = "|p__" + aname
+                    taxrank[pos] = aphylum
+                    taxrank = update_taxrank(taxrank, pos)
+                else:
+                    aphylum = ""
+
+                if rank == "C":
+                    pos = 3
+                    aclass = "|c__" + aname
+                    taxrank[pos] = aclass
+                    taxrank = update_taxrank(taxrank, pos)
+                else:
+                    aclass = ""
+
+                if rank == "O":
+                    pos = 4
+                    aorder = "|o__" + aname
+                    taxrank[pos] = aorder
+                    taxrank = update_taxrank(taxrank, pos)
+                else:
+                    aorder = ""
+
+                if rank == "F":
+                    pos = 5
+                    afamily = "|f__" + aname
+                    taxrank[pos] = afamily
+                    taxrank = update_taxrank(taxrank, pos)
+                else:
+                    afamily = ""
+
+                if rank == "G":
+                    pos = 6
+                    agenus = "|g__" + aname
+                    taxrank[pos] = agenus
+                    taxrank = update_taxrank(taxrank, pos)
+                else:
+                    agenus = ""
+
+                if rank == "S":
+                    pos = 7
+                    aspecie = "|s__" + "_".join([(aname), splitline[6]])
+                    taxrank[pos] = aspecie
+                else:
+                    aspecie = ""
+
+                towrite.append(
+                    ("{:160s}".format(''.join(taxrank)) + "\t" + str(propor) + "\n"))
+
+    with open(fileout, "w") as fw:
+        fw.write(160 * " " + "{:>21}".format(basename) + "\n")
+        for line in towrite:
+            fw.write(line)
+    print("Metaphlan report written to: " + fileout)
