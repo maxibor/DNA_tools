@@ -4,51 +4,51 @@
 
 -   **random_dna.py** : creates a random sequence of DNA of length K
 
-        	usage : `python random_dna.py K`
+    usage : `python random_dna.py K`
 
 -   **fasta_length.py** : computes the length of DNA sequences in a Fasta file
 
-        	usage : `python fasta_length.py file.fa`
+    usage : `python fasta_length.py file.fa`
 
 -   **reverse_complement.py** : computes the revese complement of a DNA sequence
 
-        	usage : `python reverse_complement.py CGGGTA`
+    usage : `python reverse_complement.py CGGGTA`
 
 -   **faStats.py** : compute sequence length of all sequences in a fasta file
 
-        	usage : `python faStats.py file.fa`
+    usage : `python faStats.py file.fa`
 
 -   **melting_temp.py** : compute melting temperature of a sequence
 
-        	usage : `melting_temp.py DnaSequence`
+    usage : `melting_temp.py DnaSequence`
 
 -   **entrez_specie.py** : returns the specie/organism name given an ENTREZ id.
 
-        	usage : `python entrez_specie.py 1567`
+    usage : `python entrez_specie.py 1567`
 
 -   **fastq_split.py** : splits a merged paired-end Illumina `{basename}.fastq` (or compressed `fastq.gz`) file in `{basename}.R1.fastq` and `{basename}.R2.fastq`
 
-        	usage : `python fastq_split.py paired_end_file.fastq`
+    usage : `python fastq_split.py paired_end_file.fastq`
 
 -   **centrifuge2krona** : converts a [centrifuge](https://github.com/infphilo/centrifuge) output file to a [krona](https://github.com/marbl/Krona/wiki) visualisation using `centrifuge-kreport` and `ktImportTaxonomy`.
 
-        	usage : `centrifuge2krona centrifuge_file.out`
+    usage : `centrifuge2krona centrifuge_file.out`
 
 -   **sam_filter** : filters a sam file on identity percentage and alignment length.
 
-        	usage: `sam_filter file.sam`
+    usage: `sam_filter file.sam`
 
 -   **fasta_filter_length** : filters a fasta file on sequence length (min and max)
 
-        	usage: `fasta_filter_length -min 1 -max 66 file.fa`
+    usage: `fasta_filter_length -min 1 -max 66 file.fa`
 
 -   **krakenTometaphlan** : converts a [Kraken] style report to a [Metaphlan] style report
 
-        	usage: `krakenTometaphlan -o metaphlan_report.txt kraken_report.txt `
+    usage: `krakenTometaphlan -o metaphlan_report.txt kraken_report.txt`
 
 -   **consensusMaker** : creates a consensus fasta from a samtools mpileup file
 
-              usage: `consensusMaker -o myconsensus.fa infile.mpileup`
+    usage : `consensusMaker -o myconsensus.fa infile.mpileup`
 
 * * *
 
