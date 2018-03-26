@@ -46,6 +46,10 @@
 
         	usage: `krakenTometaphlan -o metaphlan_report.txt kraken_report.txt `
 
+-   **consensusMaker** : creates a consensus fasta from a samtools mpileup file
+
+              usage: `consensusMaker -o myconsensus.fa infile.mpileup`
+
 * * *
 
 #### To add the tools to your command prompt :
