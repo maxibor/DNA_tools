@@ -34,7 +34,7 @@ def get_args():
     parser.add_argument(
         '-minhits',
         default=5,
-        help="Minimum number of hits to include in krona chart"
+        help="Minimum number of hits to include in krona chart. Default = 5"
     )
     parser.add_argument(
         '-outpath',
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     infile, index, taxo, lca, minlen, minscore, minhits, outpath = get_args()
 
     basename = get_basename(infile)
-    if lca == True:
+    if lca:
         cmd = "centrifuge-kreport -x " + index + " --min-score " + minscore + " --min-length " + minlen + " " + \
             infile + " > " + basename + "_centriKraken_LCA_minScore_" + \
             minscore + "_minLength_" + minlen + ".out"
