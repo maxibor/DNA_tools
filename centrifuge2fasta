@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+import sys
+
+if len(sys.argv) <= 1:
+    print(
+        """
+Extract sequences from a centrifuge and sam file using taxonomy ID.
+Usage:
+    centrifuge2fasta centrifuge_out.txt aligned.sam taxid
+        """)
+else:
+    CENTRI = sys.argv[1]
+    SAM = sys.argv[2]
+    TAXID = sys.argv[3]
+
+    match_reads = []
+    with open(CENTRI, "r") as f:
+        for line in f:
+            splitline = line.rstrip().split()
+            if TAXID == splitline[2]:
+                match_reads.append(splitline[0])
+    with open(SAM, "r") as f:
+        for read in match_reads:
+            for line in f:
+                splitline = line.rstrip().split()
+                if splitline[0] == read:
+                    print(">" + splitline[0] + "\n" + splitline[9])
+                    break
