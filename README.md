@@ -50,6 +50,10 @@
 
     usage : `consensusMaker -o myconsensus.fa infile.mpileup`
 
+-   **bed2coverage** : computes the 10th percentile coverage for each feature in a `BED` file
+
+     usage : `bed2coverage infile.bed`
+
 * * *
 
 #### To add the tools to your command prompt :
