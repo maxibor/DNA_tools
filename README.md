@@ -54,6 +54,10 @@
 
      usage : `bed2coverage infile.bed`
 
+-   **filterFastaByName**: filters a **fasta** file given a list of sequence names
+
+      usage : `filterFastaByName infile.fasta seqnames_to_keep.txt -o outfile.fa`
+
 * * *
 
 #### To add the tools to your command prompt :

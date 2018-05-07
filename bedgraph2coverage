@@ -10,9 +10,9 @@ except ImportError:
 def get_args():
     '''This function parses and return arguments passed in'''
     parser = argparse.ArgumentParser(
-        prog='bed2coverage',
-        description='position coverage Bed file to 10th percentile coverage per feature')
-    parser.add_argument('infile', help="path to bed file")
+        prog='bedgraph2coverage',
+        description='position coverage Bedgraph file to 10th percentile coverage per feature')
+    parser.add_argument('infile', help="path to bedgraph file")
     parser.add_argument(
         '-m',
         dest="minimum_coverage",
@@ -36,7 +36,7 @@ if __name__ == "__main__":
             line = line.rstrip()
             linsplit = line.split()
             feature_name = linsplit[0]
-            feature_cov = linsplit[2]
+            feature_cov = linsplit[3]
             if feature_name not in features.keys():
                 features[feature_name] = [int(feature_cov)]
             else:
