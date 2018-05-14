@@ -38,9 +38,9 @@
 
     usage: `sam_filter file.sam`
 
--   **fasta_filter_length** : filters a fasta file on sequence length (min and max)
+-   **filterFastaByLength** : filters a fasta file on sequence length (min and max)
 
-    usage: `fasta_filter_length -min 1 -max 66 file.fa`
+    usage: `filterFastaByLength -min 1 -max 66 file.fa`
 
 -   **krakenTometaphlan** : converts a [Kraken] style report to a [Metaphlan] style report
 

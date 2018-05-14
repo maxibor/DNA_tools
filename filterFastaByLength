@@ -2,34 +2,36 @@
 
 import argparse
 
+
 def _get_args():
     '''This function parses and return arguments passed in'''
     parser = argparse.ArgumentParser(
-    prog='fasta_filter_length',
-    description='Ancient DNA Read Simulator for Metagenomics')
+        prog='fasta_filter_length',
+        description='filterFastaByLength')
     parser.add_argument('fasta', help="path to input fasta file")
     parser.add_argument(
-    '-min',
-    default = 1,
-    help="Minimum sequence size. Default = 1")
+        '-min',
+        default=1,
+        help="Minimum sequence size. Default = 1")
     parser.add_argument(
-    '-max',
-    default= 99999999999999999999999999999999,
-    help="Maximim sequence size. Default = 99999999999999999999999999999999")
+        '-max',
+        default=99999999999999999999999999999999,
+        help="Maximim sequence size. Default = 99999999999999999999999999999999")
     parser.add_argument(
-    '-o',
-    dest="output",
-    default=None,
-    help="Output file basename. Default = {basename}.filtered.fa")
+        '-o',
+        dest="output",
+        default=None,
+        help="Output file basename. Default = {basename}.filtered.fa")
 
     args = parser.parse_args()
 
     infile = args.fasta
     seqmin = int(args.min)
     seqmax = int(args.max)
-    outfile= args.output
+    outfile = args.output
 
     return(infile, seqmin, seqmax, outfile)
+
 
 def get_basename(file_name):
     if ("/") in file_name:
@@ -38,13 +40,14 @@ def get_basename(file_name):
         basename = file_name.split(".")[0]
     return(basename)
 
+
 if __name__ == "__main__":
     INFILE, SEQMIN, SEQMAX, OUTFILE = _get_args()
 
     basename = get_basename(INFILE)
 
     if not OUTFILE:
-        OUTFILE = basename+".filtered.fa"
+        OUTFILE = basename + ".filtered.fa"
 
     fastadict = {}
     fasta_filtered_dict = {}
@@ -54,7 +57,7 @@ if __name__ == "__main__":
             if line.startswith(">"):
                 seqname = line
                 fastadict[seqname] = []
-            else :
+            else:
                 fastadict[seqname].append(line)
 
     for seq in fastadict.keys():
@@ -63,5 +66,5 @@ if __name__ == "__main__":
 
     with open(OUTFILE, "w") as fw:
         for seq in fasta_filtered_dict.keys():
-            fw.write(seq+"\n")
-            fw.write("\n".join(fasta_filtered_dict[seq])+"\n")
+            fw.write(seq + "\n")
+            fw.write("\n".join(fasta_filtered_dict[seq]) + "\n")
