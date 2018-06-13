@@ -2,6 +2,7 @@
 
 from Bio import SeqIO
 import sys
+from numpy import median
 # import matplotlib as mpl ##These two lines are needed
 # mpl.use('Agg') # to plot without a X server running.
 # import matplotlib.pyplot as plt
@@ -12,8 +13,10 @@ from collections import Counter
 # Usage : faStats file.fa
 # Summary : Computes sequences length statistics of a fasta file
 
+
 def maxprint(elem, maxcount):
-    return(int(elem/maxcount*80))
+    return(int(elem / maxcount * 80))
+
 
 def getmax(thecounter):
     themax = 0
@@ -22,24 +25,27 @@ def getmax(thecounter):
             themax = thecounter[elem]
     return(themax)
 
+
 seq_length = []
 filename = sys.argv[1]
 filename_short = filename.split(".")[0]
-print ("Loading fasta file...")
+print("Loading fasta file...")
 for seq_record in SeqIO.parse(filename, "fasta"):
     seq_length.append(len(seq_record.seq))
 cnt = Counter(seq_length)
 themax = getmax(cnt)
-print ("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
-print (filename+" fasta file statistics : ")
-print ("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *")
-print("Number of sequences: "+str(len(seq_length)))
-print ("Average sequence length : "+str(sum(seq_length)/len(seq_length)))
-print ("Max sequence length : "+str(max(seq_length)))
-print ("Min sequence length : "+str(min(seq_length)))
-print ("Distribution of sequence lengths")
+print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+print(filename + " fasta file statistics : ")
+print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *")
+print("Number of sequences: " + str(len(seq_length)))
+print("Average sequence length : " + str(sum(seq_length) / len(seq_length)))
+print("Median sequence length :", str(median(seq_length)))
+print("Max sequence length : " + str(max(seq_length)))
+print("Min sequence length : " + str(min(seq_length)))
+print("Distribution of sequence lengths")
 for elem in sorted(list(set(cnt.elements()))):
-    print("{0:6}".format(elem), "-", "{0:6}".format(cnt[elem]),  "|", "*"*maxprint(cnt[elem], themax ),)
+    print("{0:6}".format(elem), "-",
+          "{0:6}".format(cnt[elem]),  "|", "*" * maxprint(cnt[elem], themax),)
 
 # print ("Histogram of sequences length saved in "+filename_short+"_seq_len_distrib.png")
 # print ("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")

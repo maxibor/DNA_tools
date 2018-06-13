@@ -14,9 +14,9 @@
 
     usage : `python reverse_complement.py CGGGTA`
 
--   **faStats.py** : compute sequence length of all sequences in a fasta file
+-   **faStats** : compute sequence length of all sequences in a fasta file
 
-    usage : `python faStats.py file.fa`
+    usage : `python faStats file.fa`
 
 -   **melting_temp.py** : compute melting temperature of a sequence
 
