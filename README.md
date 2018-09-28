@@ -38,6 +38,10 @@
 
     usage: `sam_filter file.sam`
 
+- **bam_filter** : filters a bam file on identity percentage
+
+    usage: `bam_filter file.bam`
+
 -   **filterFastaByLength** : filters a fasta file on sequence length (min and max)
 
     usage: `filterFastaByLength -min 1 -max 66 file.fa`
