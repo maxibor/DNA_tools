@@ -1,0 +1,168 @@
+#!/usr/bin/env python
+
+import argparse
+import gzip
+import sys
+from tqdm import tqdm
+import mmap
+import subprocess
+
+
+def _get_args():
+    '''This function parses and return arguments passed in'''
+    parser = argparse.ArgumentParser(
+        prog='eslfasta2fastq',
+        description='Converts esl fasta to fastq')
+    parser.add_argument('fasta', help="path to fasta file")
+    parser.add_argument(
+        'fq1', help="path to original fastq forward file or single end fastq file")
+    parser.add_argument(
+        '-fq2',
+        dest='fq2',
+        default=None,
+        help="path to original fastq reverse file"
+    )
+    parser.add_argument(
+        '-c',
+        dest='compress',
+        default=True,
+        help='Compress output fastq file (True | False). Default = True'
+    )
+
+    args = parser.parse_args()
+
+    fastain = args.fasta
+    fq1 = args.fq1
+    fq2 = args.fq2
+    compress = args.compress
+    return(fastain, fq1, fq2, compress)
+
+
+def get_basename(file_name):
+    return(file_name.split("/")[-1].split(".")[0])
+
+
+def get_num_lines(file_path, compress):
+    if compress:
+        cmd = f"zcat {file_path} | wc -l"
+        res = subprocess.check_output(cmd, shell=True)
+    else:
+        cmd = f"wc -l {file_path}"
+        res = subprocess.check_output(cmd, shell=True)
+    return(int(res.decode('utf-8').split(" ")[0]))
+
+
+class fasta ():
+    def __init__(self, fa_file):
+        self.headers = []
+        with open(fa_file, 'r') as f:
+            for line in f:
+                if line[0] == ">":
+                    self.headers.append(line[1:].rstrip())
+
+    def esl_fasta(self):
+        self.read_id = []
+        for i in self.headers:
+            self.read_id.append(i.split("/")[0])
+        return(self.read_id)
+
+
+class fastq ():
+    def __init__(self, fq_file):
+        self.reads = {}
+
+        def parse_fq(fq_file, stream, compress):
+            reads = {}
+            for line in tqdm(stream, total=get_num_lines(fq_file, compress)):
+                if compress:
+                    line = str(line.decode('utf-8').rstrip())
+                else:
+                    line = line.rstrip()
+                if line.startswith("@SRR") or line.startswith("@HWUSI"):
+                    seqid = line.split(" ")[0][1:]
+                    reads[seqid] = [line]
+                else:
+                    reads[seqid].append(line)
+            print("Done reading fastq file")
+            return(reads)
+
+        if ".gz" in fq_file:
+            with gzip.open(fq_file, "rb") as f:
+                self.reads = parse_fq(fq_file, f, compress=True)
+        else:
+            with open(fq_file, "r") as f:
+                self.reads = parse_fq(fq_file, f, compress=False)
+
+
+def match_to_list(fa, fq):
+    print("Checking matched reads")
+    return(set(fa).intersection(set(list(fq.reads.keys()))))
+
+
+def single_end_write(fa, fq1, out1, compress):
+    matched = match_to_list(fa, fq1)
+
+    def write_content(stream, fq, matched):
+        for item in matched:
+            stream.write("\n".join(fq.reads[item]))
+            stream.write("\n")
+
+    if compress == True:
+        with gzip.open(out1, 'wb') as f:
+            write_content(f, fq1, matched)
+    else:
+        with open(out1, 'w') as f:
+            write_content(f, fq1, matched)
+
+
+def paired_end_write(fa, fq1, fq2, out1, out2, compress):
+    matched1 = match_to_list(fa, fq1)
+    matched2 = match_to_list(fa, fq2)
+
+    def write_content(stream, fq, matched):
+        for item in matched:
+            stream.write("\n".join(fq.reads[item]))
+            stream.write("\n")
+
+    if compress == True:
+        with gzip.open(out1, 'wb') as f1:
+            write_content(f1, fq1, matched1)
+        with gzip.open(out2, 'wb') as f2:
+            write_content(f2, fq2, matched2)
+    else:
+        with open(out1, 'w') as f1:
+            write_content(f1, fq1, matched1)
+        with open(out2, 'w') as f2:
+            write_content(f2, fq2, matched2)
+
+
+if __name__ == "__main__":
+    FAIN, FQ1, FQ2, COMPR = _get_args()
+
+    if COMPR == True:
+        ending = '.fastq.gz'
+    else:
+        ending = '.fastq'
+
+    if FQ1 and FQ2:
+        OUT1 = f"{get_basename(FAIN)}_1.filtered{ending}"
+        OUT2 = f"{get_basename(FAIN)}_2.filtered{ending}"
+    elif FQ1:
+        OUT1 = f"{get_basename(FAIN)}.filtered{ending}"
+    else:
+        print("Please provide the original fastq file(s)")
+        sys.exit(1)
+
+    print("Reading fasta file")
+    infa = fasta(FAIN).esl_fasta()
+    print("Reading first fastq file")
+    fastq1 = fastq(FQ1)
+    if FQ2:
+        print("Reading second fastq file")
+        fastq2 = fastq(FQ2)
+
+    if not FQ2:
+        single_end_write(fa=infa, fq1=fastq1, out1=OUT1, compress=COMPR)
+    else:
+        paired_end_write(fa=infa, fq1=fastq1, fq2=fastq2,
+                         out1=OUT1, out2=OUT2, compress=COMPR)

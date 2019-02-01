@@ -62,6 +62,9 @@
 
       usage : `filterFastaByName infile.fasta seqnames_to_keep.txt -o outfile.fa`
 
+-  **eslfasta2fastq**: Extracts the headers of fasta file formatted by Easel ([hmmer](http://hmmer.org/) toolkit) and get the matching fastq records
+      usage : `eslfasta2fastq fasta_input forward.fq -fq2 reverse.fq`
+
 * * *
 
 #### To add the tools to your command prompt :
