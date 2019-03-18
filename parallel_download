@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+
+import argparse
+import multiprocessing
+import subprocess
+from functools import partial
+
+
+def _get_args():
+    '''This function parses and return arguments passed in'''
+    parser = argparse.ArgumentParser(
+        prog='parallel_download',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=f'''
+==========================================================
+Parallel wget downlad using multiprocessing and subprocess
+==========================================================
+        '''
+    )
+    parser.add_argument(
+        'file_list', help="path to file list to download (1 per line)")
+    parser.add_argument(
+        '-p',
+        dest="process",
+        default=4,
+        help="Number of parallel download. Default = 4")
+    parser.add_argument(
+        '-o',
+        dest="output_dir",
+        default='.',
+        help="Output directory where files will be downloaded. Default = .")
+
+    args = parser.parse_args()
+    fl = args.file_list
+    process = int(args.process)
+    odir = args.output_dir
+
+    return(fl, process, odir)
+
+
+def dl(file, outdir):
+    cmd = f"wget {file} -P {outdir}"
+    print(cmd)
+    subprocess.check_output(cmd, shell=True)
+
+
+def par_dl(allfiles, outdir, process):
+    dl_fun = partial(dl, outdir=outdir)
+    with multiprocessing.Pool(process) as p:
+        p.map(dl_fun, allfiles)
+
+
+def getfile(infile):
+    allfiles = []
+    with open(infile, 'r') as f:
+        for line in f:
+            allfiles.append(line.rstrip())
+    return(allfiles)
+
+
+if __name__ == "__main__":
+    FL, PROC, ODIR = _get_args()
+    af = getfile(FL)
+    par_dl(af, ODIR, PROC)

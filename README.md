@@ -65,6 +65,9 @@
 -  **eslfasta2fastq**: Extracts the headers of fasta file formatted by Easel ([hmmer](http://hmmer.org/) toolkit) and get the matching fastq records
       usage : `eslfasta2fastq fasta_input forward.fq -fq2 reverse.fq`
 
+- **parallel_download**: Download files from a list of files (on file per line) in a parallel fashion using multiprocessing, and subprocess calling wget
+      usage: `parallel_download list_of_files.txt`
+
 * * *
 
 #### To add the tools to your command prompt :
