@@ -42,10 +42,18 @@ print("Average sequence length : " + str(sum(seq_length) / len(seq_length)))
 print("Median sequence length :", str(median(seq_length)))
 print("Max sequence length : " + str(max(seq_length)))
 print("Min sequence length : " + str(min(seq_length)))
+step = int((max(seq_length) - min(seq_length)) / 20)
+bins = list(range( min(seq_length), max(seq_length), step))
+if max(seq_length) not in bins:
+    bins.append(max(seq_length))
 print("Distribution of sequence lengths")
-for elem in sorted(list(set(cnt.elements()))):
-    print("{0:6}".format(elem), "-",
-          "{0:6}".format(cnt[elem]),  "|", "*" * maxprint(cnt[elem], themax),)
+for b in range(0, len(bins)):
+    bincnt = 0
+    for elem in sorted(list(set(cnt.elements()))):
+        if elem >= bins[b] and elem < bins[b+1]:
+            bincnt +=1
+    print("{0:6}".format(bins[b]), "-",
+          "{0:6}".format(bincnt),  "|", "*" * maxprint(bincnt, themax),)
 
 # print ("Histogram of sequences length saved in "+filename_short+"_seq_len_distrib.png")
 # print ("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
