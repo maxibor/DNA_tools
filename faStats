@@ -3,6 +3,7 @@
 from Bio import SeqIO
 import sys
 from numpy import median
+import plotille
 # import matplotlib as mpl ##These two lines are needed
 # mpl.use('Agg') # to plot without a X server running.
 # import matplotlib.pyplot as plt
@@ -38,28 +39,9 @@ print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
 print(filename + " fasta file statistics : ")
 print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *")
 print("Number of sequences: " + str(len(seq_length)))
-print("Average sequence length : " + str(sum(seq_length) / len(seq_length)))
+print("Average sequence length : " + str(round(sum(seq_length) / len(seq_length),2)))
 print("Median sequence length :", str(median(seq_length)))
 print("Max sequence length : " + str(max(seq_length)))
 print("Min sequence length : " + str(min(seq_length)))
-step = int((max(seq_length) - min(seq_length)) / 20)
-bins = list(range( min(seq_length), max(seq_length), step))
-if max(seq_length) not in bins:
-    bins.append(max(seq_length))
-print("Distribution of sequence lengths")
-for b in range(0, len(bins)):
-    bincnt = 0
-    for elem in sorted(list(set(cnt.elements()))):
-        if elem >= bins[b] and elem < bins[b+1]:
-            bincnt +=1
-    print("{0:6}".format(bins[b]), "-",
-          "{0:6}".format(bincnt),  "|", "*" * maxprint(bincnt, themax),)
-
-# print ("Histogram of sequences length saved in "+filename_short+"_seq_len_distrib.png")
-# print ("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
-
-# plt.hist(seq_length,color = "green")
-# plt.ylabel("Number of sequences")
-# plt.xlabel("Length of sequences")
-# plt.title("Sequence length distribution in "+filename)
-# plt.savefig(filename_short+"_seq_len_distrib.png")
+bins = min(30, int(len(seq_length)/5))
+print(plotille.hist(seq_length, width=60, bins=bins))
