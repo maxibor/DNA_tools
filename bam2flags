@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+
+import argparse
+import multiprocessing
+import sys
+from functools import partial
+import pysam
+import matplotlib.pyplot as plt
+
+
+def get_args():
+    '''This function parses and return arguments passed in'''
+    parser = argparse.ArgumentParser(
+        prog='bam2flags',
+        description='Counts bam flags')
+    parser.add_argument(
+        'bam',
+        help="Bam aligment file")
+    parser.add_argument(
+        '-o',
+        dest="output",
+        default=None,
+        help="Output graph file basename. Default = {bam_basename}.fragment_length_distrib.png")
+
+    args = parser.parse_args()
+
+    bam = args.bam
+    outfile = args.output
+
+    return(bam, outfile)
+
+
+def getBasename(file_name):
+    if ("/") in file_name:
+        basename = file_name.split("/")[-1].split(".")[0]
+    else:
+        basename = file_name.split(".")[0]
+    return(basename)
+
+
+def getflags(bam):
+    flags = {}
+
+    bamfile = pysam.AlignmentFile(bam, "rb")
+
+    for read in bamfile.fetch():
+        if read.flag not in flags.keys():
+            flags[read.flag] = 1
+        else:
+            flags[read.flag] += 1
+    return(flags)
+
+
+if __name__ == "__main__":
+    BAM, OUTFILE,  = get_args()
+
+    if OUTFILE is None:
+        OUTFILE = getBasename(BAM) + ".fragment_length_distrib.png"
+
+    flags = getflags(bam=BAM)
+
+    plt.bar(range(len(flags)), list(flags.values()), align='center')
+    plt.xticks(range(len(flags)), list(flags.keys()))
+    plt.title("Count of SAM flags")
+    plt.savefig(OUTFILE)
+    print("************************************************" +
+          "*" * (len(OUTFILE)) + "**")
+    print("* The BAM flag distribution has been written to " + OUTFILE + " *")
+    print("************************************************" +
+          "*" * (len(OUTFILE)) + "**")
+    print("To have an overview of the signification of bam flags, have a look at http://www.samformat.info/sam-format-flag")
+    print("Common sam flags are:")
+    print("One of the reads is unmapped:\n\t73, 133, 89, 121, 165, 181, 101, 117, 153, 185, 69, 137 ")
+    print("Both reads are unmapped:\n\t77, 141 ")
+    print("Mapped within the insert size and in correct orientation:\n\t99, 147, 83, 163")
+    print("Mapped within the insert size but in wrong orientation:\n\t67, 131, 115, 179 ")
+    print("Mapped uniquely, but with wrong insert size:\n\t81, 161, 97, 145, 65, 129, 113, 177 ")
