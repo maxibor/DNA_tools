@@ -56,17 +56,22 @@
 
 -   **bed2coverage** : computes the 10th percentile coverage for each feature in a `BED` file
 
-     usage : `bed2coverage infile.bed`
+    usage : `bed2coverage infile.bed`
 
 -   **filterFastaByName**: filters a **fasta** file given a list of sequence names
 
-      usage : `filterFastaByName infile.fasta seqnames_to_keep.txt -o outfile.fa`
+    usage : `filterFastaByName infile.fasta seqnames_to_keep.txt -o outfile.fa`
 
 -  **eslfasta2fastq**: Extracts the headers of fasta file formatted by Easel ([hmmer](http://hmmer.org/) toolkit) and get the matching fastq records
-      usage : `eslfasta2fastq fasta_input forward.fq -fq2 reverse.fq`
+-  
+    usage : `eslfasta2fastq fasta_input forward.fq -fq2 reverse.fq`
 
 - **parallel_download**: Download files from a list of files (on file per line) in a parallel fashion using multiprocessing, and subprocess calling wget
-      usage: `parallel_download list_of_files.txt`
+  
+    usage: `parallel_download list_of_files.txt`
+
+- **fasta_split**: Splits fasta sequences in shorter sequences, using a negative binomial distribution
+    usage: `python fasta_split.py -m 800 input_sequences.fa`
 
 * * *
 
