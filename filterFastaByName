@@ -11,19 +11,12 @@ def get_args():
         description='Filter fasta file by sequence name')
     parser.add_argument('fasta', help="path to fasta input file")
     parser.add_argument('feature_names', help="feature names to keep")
-    parser.add_argument(
-        '-o',
-        dest="outfile",
-        default="your_output.fa",
-        help="Output fasta file")
-
     args = parser.parse_args()
 
     infile = args.fasta
     names = args.feature_names
-    outfile = args.outfile
 
-    return(infile, names, outfile)
+    return(infile, names)
 
 
 def read_fasta(fasta):
@@ -65,29 +58,30 @@ def filter_fasta_dict_by_name(fasta_dict, seqnames):
     return(filtered_fasta)
 
 
-def write_fasta(fasta_dict, outfile):
+def print_fasta(fasta_dict):
     """
     WRITE A FASTA DICT TO FILE
     INPUT:
         fasta_dict(dict) dictionary of a fasta file
         outfile(str) name of output file
     """
-    with open(outfile, "w") as f:
-        for akey in fasta_dict.keys():
-            f.write(">" + akey + "\n" +
-                    textwrap.fill(fasta_dict[akey], 80) + "\n")
+    for akey in fasta_dict.keys():
+        print(">" + akey + "\n" +
+                textwrap.fill(fasta_dict[akey], 80))
 
 
 if __name__ == "__main__":
-    INFILE, NAMES, OUTFILE = get_args()
+    INFILE, NAMES = get_args()
 
     seqnames = []
-    with open(NAMES, "r") as f:
-        for line in f:
-            line = line.rstrip()
-            seqnames.append(line)
+    try:
+        with open(NAMES, "r") as f:
+            for line in f:
+                line = line.rstrip()
+                seqnames.append(line)
+    except FileNotFoundError:
+        seqnames=str(NAMES).split(",")
     myfasta = read_fasta(INFILE)
 
     filtered_fasta = filter_fasta_dict_by_name(myfasta, seqnames)
-    write_fasta(filtered_fasta, OUTFILE)
-    print("--------------------\nFiltered fasta written to", OUTFILE)
+    print_fasta(filtered_fasta)
