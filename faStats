@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from Bio import SeqIO
+from Bio.SeqUtils import GC
 import sys
 from numpy import median
 import plotille
@@ -8,11 +9,15 @@ import plotille
 # mpl.use('Agg') # to plot without a X server running.
 # import matplotlib.pyplot as plt
 from collections import Counter
+import gzip
+from mimetypes import guess_type
+from functools import partial
 
 # Author : Maxime Borry
 # Contact : maxime.borry@gmail.com
 # Usage : faStats file.fa
 # Summary : Computes sequences length statistics of a fasta file
+
 
 
 def maxprint(elem, maxcount):
@@ -26,22 +31,52 @@ def getmax(thecounter):
             themax = thecounter[elem]
     return(themax)
 
+def n50(list_of_lengths):
+    """Calculate N50 for a sequence of numbers.
+ 
+    Args:
+        list_of_lengths (list): List of numbers.
+ 
+    Returns:
+        float: N50 value.
+ 
+    """
+    tmp = []
+    for tmp_number in set(list_of_lengths):
+            tmp += [tmp_number] * list_of_lengths.count(tmp_number) * tmp_number
+    tmp.sort()
+ 
+    if (len(tmp) % 2) == 0:
+        median = (tmp[int(len(tmp) / 2) - 1] + tmp[int(len(tmp) / 2)]) / 2
+    else:
+        median = tmp[int(len(tmp) / 2)]
+ 
+    return median
+
 
 seq_length = []
+genome_seq = ''
 filename = sys.argv[1]
-filename_short = filename.split(".")[0]
+encoding = guess_type(filename)[1]  # uses file extension
+_open = partial(gzip.open, mode='rt') if encoding == 'gzip' else open
 print("Loading fasta file...")
-for seq_record in SeqIO.parse(filename, "fasta"):
-    seq_length.append(len(seq_record.seq))
+with _open(filename) as f:
+    for seq_record in SeqIO.parse(f, "fasta"):
+        seq_length.append(len(seq_record.seq))
+        genome_seq += seq_record.seq
 cnt = Counter(seq_length)
 themax = getmax(cnt)
+gc_content = GC(genome_seq)
+
 print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
 print(filename + " fasta file statistics : ")
 print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *")
 print("Number of sequences: " + str(len(seq_length)))
 print("Average sequence length : " + str(round(sum(seq_length) / len(seq_length),2)))
 print("Median sequence length :", str(median(seq_length)))
+print("N50:", str(n50(seq_length)))
 print("Max sequence length : " + str(max(seq_length)))
 print("Min sequence length : " + str(min(seq_length)))
-bins = min(30, int(len(seq_length)/5))
+print("Global GC content: " + str(round(gc_content,2))+ "%")
+bins = min(30, max(1,int(len(seq_length)/5)))
 print(plotille.hist(seq_length, width=60, bins=bins))
