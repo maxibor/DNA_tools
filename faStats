@@ -67,11 +67,13 @@ with _open(filename) as f:
 cnt = Counter(seq_length)
 themax = getmax(cnt)
 gc_content = GC(genome_seq)
+total_len = sum(seq_length)
 
 print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
 print(filename + " fasta file statistics : ")
 print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *")
 print("Number of sequences: " + str(len(seq_length)))
+print("Total sequence length:" + str(total_len))
 print("Average sequence length : " + str(round(sum(seq_length) / len(seq_length),2)))
 print("Median sequence length :", str(median(seq_length)))
 print("N50:", str(n50(seq_length)))
