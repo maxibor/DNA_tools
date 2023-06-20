@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+from Bio import SeqIO
+from mimetypes import guess_type
+import sys
+from functools import partial
+import gzip
+from collections import Counter
+
+# Author : Maxime Borry
+# Contact : maxime.borry@gmail.com
+# Usage : compare_fasta_seqs file.fa
+# Summary : Compare 2 or more sequences in a multifasta file
+
+
+filename = sys.argv[1]
+encoding = guess_type(filename)[1]  # uses file extension
+_open = partial(gzip.open, mode="rt") if encoding == "gzip" else open
+
+seq_dict = dict()
+
+print("Loading fasta file...")
+with _open(filename) as f:
+    for seq_record in SeqIO.parse(f, "fasta"):
+        seq_dict.setdefault(seq_record.id, seq_record.seq)
+
+lengths = [len(seq_dict[seq]) for seq in seq_dict]
+maxlen = max(lengths)
+minlen = min(lengths)
+
+if maxlen != minlen:
+    print("Sequences are not of identical length")
+    sys.exit(1)
+else:
+    diffs = dict()
+    for p in range(minlen):
+        bases = []
+        for s in seq_dict:
+            bases.append(seq_dict[s][p])
+        if len(bases) == len(list(set(bases))):
+            diffs[p] = bases
+
+if len(diffs) > 0:
+    change_summary = dict(Counter([tuple(diffs[p]) for p in diffs]))
+    change_summary = sorted(change_summary.items(), key=lambda x:x[1])[::-1]
+    print(f"* {len(diffs)} difference(s) were found between sequences\n")
+    print("Summary of changes:\n")
+    for c in change_summary:
+        print(f"{', '.join(c[0])} : {c[1]}")
+    print("\nList of changes:\n")
+    for p in diffs:
+        print(f"position: {p}\n")
+        for s, d in zip(list(seq_dict.keys()), diffs[p]):
+            print(f"{s} : {d}\n")
+        print("-------\n")
+    sys.exit(1)
+else:
+    print("Sequences are identical")
+    sys.exit(0)
